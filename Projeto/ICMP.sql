@@ -11,14 +11,16 @@ use ICMP;
 	Informações do leito, onde será guardad informações para que seja possível:
 
 */
-create table if not exists Leito(
+drop table if exists Leito;
+create table Leito(
 	idLeito int(11) primary key,
 	Status bool not null
 	/* Incluir FK'S */
 	/*Possíveis atribuições: função do leito, equipamentos, chefe de departamento, */
 );
 
-create table if not exists Endereco(
+drop table if exists Endereco;
+create table Endereco(
 	idEndereco integer(11) primary key,
 	Rua varchar(255) not null,
 	numero varchar(20) not null,
@@ -29,7 +31,8 @@ create table if not exists Endereco(
 	Informações do paciente que será tratado na unidade 
 	
 */
-create table if not exists ProblemasdoPaciente(
+drop table if exists ProblemasdoPaciente;
+create table ProblemasdoPaciente(
 	/* 
 		Incluir todas as observações de problemas do paciente para futuras consultas
 	*/
@@ -37,7 +40,8 @@ create table if not exists ProblemasdoPaciente(
 
 );
 
-create table if not exists Paciente(
+drop table if exists Paciente;
+create table Paciente(
 	idPaciente integer(11) primary key, /* id do paciente deve ser id padrão, pois o mesmo pode não ter outra forma de identificação */
 	CartaoSus integer(tamanho), 
 	Nome varchar(255) not null,
@@ -47,7 +51,8 @@ create table if not exists Paciente(
 );
 
 /* Tabela para listar os atendimentos realizados com os clientes 1-N atendimentos */
-create table if not exists Atendimentos(
+drop table if exists Atendimentos;
+create table Atendimentos(
 	/* 
 		Incluir FK'S
 		data de entrada, saida, problemas, atendimento realizado, status, problemas futuros...
@@ -60,7 +65,8 @@ create table if not exists Atendimentos(
 	Funcionarios no ramo da saúde da unidade tais como médicos e enfermeiros 
 	
 */
-create table if not exists Funcionario(
+drop table if exists Funcionario;
+create table Funcionario(
 	idFuncionario integer primary key,
 	Rg integer(13) not null,
 	Cpf integer(11) not null,
@@ -72,8 +78,13 @@ create table if not exists Funcionario(
 	Tabela sobre a ocupação do leito por pacientes 
 	
 */
-create table if not exists OcupacaoLeito(
+drop table if exists OcupacaoLeito;
+create table OcupacaoLeito(
 	idLeito integer(11) primary key,
-	NomePaciente varchar(255)
-	/* incluir FK'S */
+	constraint fk_Paciente foreign key(idPaciente) references Paciente (idPaciente),
+	/*NomePaciente varchar(255)	????*/
+	/* 
+		incluir FK'S 
+		ProblemasdoPaciente
+	*/
 );
