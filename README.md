@@ -12,7 +12,6 @@ Desenvolver seguindo seguintes passos:</h3>
 3-Check in e Check out<br>
 4-Listagem dos leitos(Status,DataEntrada,DataSaida,CodigoID,CodigoEmergencia<br>
 5-Cadastro dos Enfermeiros(Nome,<br>
-6-Editar informações paciente.<br>
 }<br>
 5-Linkar o BANCO ao sistema ICMP.<br>
 <br>
