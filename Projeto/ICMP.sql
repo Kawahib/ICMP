@@ -1,81 +1,61 @@
-/*/
-	Base de dados para atender as necessidades de uma agencia de saúde
-	tem como base guardar dados sobre pacientes e funcionarios para que 
-	seja assim possível manutenir e gerenciar a mesma.
-/*/
-
 drop database if exists ICMP;
 create database ICMP;
 use ICMP;
 
-/*/
- *	Informações do leito, onde será guardad informações para que seja possível:
-/*/
+create sequence public.sq_pk_Leito start 1;
 drop table if exists Leito;
-create table Leito(
-	idLeito int(11) primary key,
-	Status bool not null /* ???? wtf */
+create table public.Leito(
+	idLeito bigint not null default nextval('public.sq_pk_Leito'),
+	Status bool not null,
+	constraint pk_Leito primary key (idLeito)
 );
 
+create sequence public.sq_pk_Endereco start 1;
 drop table if exists Endereco;
-create table Endereco(
-	idEndereco integer(11) primary key,
+create table public.Endereco(
+	idEndereco bigint not null default nextval('public.sq_pk_Endereco'),
 	Rua varchar(255) not null,
 	numero varchar(20) not null,
 	complemento varchar(255),
+	constraint pk_Endereco primary key (idEndereco)
 );
 
 drop table if exists Paciente;
 create table Paciente(
-	idPaciente integer(11) primary key, /*/ id do paciente deve ser id padrão, pois o mesmo pode não ter outra forma de identificação /*/
-	CartaoSus integer(tamanho), 
+	idPaciente bigint primary key,
+	CartaoSus bigint, 
 	Nome varchar(255) not null,
-	Cpf integer(11) not null,
-	DataNascimento date not null
-	constraint fk_Endereco foreign key(idEndereco) references Endereco (idEndereco),
-	/*/ Incluir endereço e FK'S /*/
+	Cpf bigint not null,
+	DataNascimento date not null,
+	constraint fk_Endereco foreign key(idEndereco) references Endereco (idEndereco)
 );
 
-/*/ 
- *	Tabela para listar os atendimentos realizados com os clientes 1-N atendimentos 
-/*/
+create sequence public.sq_pk_Atendimentos start 1;
 drop table if exists Atendimentos;
-create table Atendimentos(
-	idAtendimento integer(11) primary key,
+create table public.Atendimentos(
+	idAtendimento bigint not null default nextval('public.sq_pk_Atendimentos'),
 	DataSaida date,
-	constraint fk_AtendimentoLeito foreign key(idOCPLeito) references OcupacaoLeito (idOCPLeito),
-	/*/ 
-		Incluir FK'S
-		data de entrada, saida, problemas, atendimento realizado, status, problemas futuros...
-	/*/
-
-
+	constraint pk_Atendimentos primary key (idAtendimento),
+	constraint fk_AtendimentoLeito foreign key(idOCPLeito) references OcupacaoLeito (idOCPLeito)
 );
 
-/*/
- *	Funcionarios no ramo da saúde da unidade tais como médicos e enfermeiros 
-/*/
 drop table if exists Funcionario;
 create table Funcionario(
 	CRM varchar(9) primary key,
 	Nome varchar(255) not null,
-	Rg integer(13) not null,
-	Cpf integer(11) not null,
-	DataNascimento date not null
+	Rg bigint not null,
+	Cpf bigint not null,
+	DataNascimento date not null,
 	constraint fk_Endereco foreign key(idEndereco) references Endereco (idEndereco),
 	constraint fk_Atendimento foreign key(idAtendimento) references Atendimentos (idAtendimento)
-	/* Incluir endereço e FK'S */
 );
 
-/*/ 
- *	Tabela sobre a ocupação do leito por pacientes 	
-/*/
 drop table if exists OcupacaoLeito;
 create table OcupacaoLeito(
-	idOCPLeito integer(11) primary key,
+	idOCPLeito bigint primary key,
 	DataEntrada date,
 	Observacoes varchar(255),
-	constraint fk_Paciente foreign key(idPaciente) references Paciente (idPaciente), /*/ Info do Paciente /*/
-	constraint fk_Leito foreign key(idLeito) references Leito (idLeito), /*/ Info do Leito /*/
-	constraint fk_Leito foreign key(idLeito) references Leito (idLeito) /*/ Info dos Responsáveis /*/
+	constraint fk_Paciente foreign key(idPaciente) references Paciente (idPaciente),
+	constraint fk_Leito foreign key(idLeito) references Leito (idLeito), 
+	constraint fk_Leito foreign key(idLeito) references Leito (idLeito) 
 );
