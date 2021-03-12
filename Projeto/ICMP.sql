@@ -42,6 +42,7 @@ create table Paciente(
 drop table if exists Atendimentos;
 create table Atendimentos(
 	idAtendimento integer(11) primary key,
+	DataSaida date,
 	constraint fk_AtendimentoLeito foreign key(idOCPLeito) references OcupacaoLeito (idOCPLeito),
 	/*/ 
 		Incluir FK'S
