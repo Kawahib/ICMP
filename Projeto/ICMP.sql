@@ -27,16 +27,8 @@ create table Paciente(
 	Nome varchar(255) not null,
 	Cpf bigint not null,
 	DataNascimento date not null,
-	constraint fk_Endereco foreign key(idEndereco) references Endereco (idEndereco)
-);
-
-create sequence public.sq_pk_Atendimentos start 1;
-drop table if exists Atendimentos;
-create table public.Atendimentos(
-	idAtendimento bigint not null default nextval('public.sq_pk_Atendimentos'),
-	DataSaida date,
-	constraint pk_Atendimentos primary key (idAtendimento),
-	constraint fk_AtendimentoLeito foreign key(idOCPLeito) references OcupacaoLeito (idOCPLeito)
+	idEndereco bigint not null,
+	foreign key(idEndereco) references Endereco (idEndereco)
 );
 
 drop table if exists Funcionario;
@@ -46,8 +38,8 @@ create table Funcionario(
 	Rg bigint not null,
 	Cpf bigint not null,
 	DataNascimento date not null,
-	constraint fk_Endereco foreign key(idEndereco) references Endereco (idEndereco),
-	constraint fk_Atendimento foreign key(idAtendimento) references Atendimentos (idAtendimento)
+	idEndereco bigint not null,
+	foreign key(idEndereco) references Endereco (idEndereco)
 );
 
 drop table if exists OcupacaoLeito;
@@ -55,7 +47,18 @@ create table OcupacaoLeito(
 	idOCPLeito bigint primary key,
 	DataEntrada date,
 	Observacoes varchar(255),
-	constraint fk_Paciente foreign key(idPaciente) references Paciente (idPaciente),
-	constraint fk_Leito foreign key(idLeito) references Leito (idLeito), 
-	constraint fk_Leito foreign key(idLeito) references Leito (idLeito) 
+	idPaciente bigint,
+	idLeito bigint,
+	foreign key(idPaciente) references Paciente (idPaciente),
+	foreign key(idLeito) references Leito (idLeito)
+);
+
+create sequence public.sq_pk_Atendimentos start 1;
+drop table if exists Atendimentos;
+create table public.Atendimentos(
+	idAtendimento bigint not null default nextval('public.sq_pk_Atendimentos'),
+	DataSaida date,
+	idOCPLeito bigint not null, 
+	constraint pk_Atendimentos primary key (idAtendimento),
+	foreign key(idOCPLeito) references OcupacaoLeito (idOCPLeito)
 );
