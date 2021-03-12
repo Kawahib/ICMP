@@ -1,3 +1,4 @@
+/* Versão 1.0 */
 drop database if exists ICMP;
 create database ICMP;
 use ICMP;
